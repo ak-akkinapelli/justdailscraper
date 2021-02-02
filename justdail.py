@@ -1,8 +1,8 @@
 from bs4 import BeautifulSoup
-import urllib
 import urllib.request
-import requests
 import csv
+import os
+from urllib.parse import urljoin, urlparse
 
 def innerHTML(element):
     return element.decode_contents(formatter="html")
@@ -27,17 +27,19 @@ csvwriter = csv.DictWriter(out_file,fieldnames=fields,extrasaction='ignore', del
 
 while True:
   # Check if reached end of result
-  if page_number > 2:
-    break
-
-  url="https://www.justdial.com/Hyderabad/Tailors/nct-10470248"
+  if page_number > 1:
+      break
+  url="https://www.justdial.com/Hyderabad/Tailors/nct-10470248/page-%s"% (page_number)
   print(url)
   req = urllib.request.Request(url, headers={'User-Agent' : "Mozilla/5.0 (Windows NT 6.1; Win64; x64)"}) 
   page = urllib.request.urlopen( req )
 
   soup = BeautifulSoup(page.read(), "html.parser")
   services = soup.find_all('li', {'class': 'cntanr'})
-
+  pathname = 'D:\Startups\Swaty'
+  # if path doesn't exist, make that path dir
+  if not os.path.isdir(pathname):
+      os.makedirs(pathname)
   # Iterate through the 10 results in the page
   for service_html in services:
 
@@ -60,7 +62,12 @@ while True:
 
     print("#" + str(service_count) + " " , dict_service)
     service_count += 1
-
+    filename = open(os.path.join(pathname+ "\img", str(name)+".jpg"), 'wb')
+    raw_img = urllib.request.urlopen(img).read()
+    # write data read to the file
+    filename.write(raw_img)
+    
   page_number += 1
 
 out_file.close()
+filename.close()
