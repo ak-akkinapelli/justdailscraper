@@ -99,10 +99,10 @@ csvwriter = csv.DictWriter(out_file, delimiter=',', fieldnames=fields)
 #csvwriter.writerow(dict((fn,fn) for fn in fields))
 while True:
 	# Check if reached end of result
-	if page_number > 1500:
+	if page_number > 50:
 		break
 
-	url="https://www.justdial.com/Hyderabad/Tailors-For-Women/nct-10470288/page-%s" % (page_number)
+	url="https://www.justdial.com/Hyderabad/Tailors/nct-10470248/page-%s" % (page_number)
 	print(url)
 	req = urllib.request.Request(url, headers={'User-Agent' : "Mozilla/5.0 (Windows NT 6.1; Win64; x64)"}) 
 	page = urllib.request.urlopen( req )
